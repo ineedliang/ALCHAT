@@ -386,7 +386,58 @@ Recommended text source settings: monospace font (Consolas or Courier New), fixe
 
 <br>
 
+## Gated Models & HuggingFace Token
+
+Some of the most popular models -- including **Meta Llama**, **Google Gemma**, and **Microsoft Phi** -- are *gated*. HuggingFace requires you to accept the model's license agreement and authenticate with a personal access token before you can download them. This is a one-time setup per model family.
+
+**Models that require a token:**
+
+| Requires token | No token needed |
+|---|---|
+| Meta Llama (all versions) | Qwen (all sizes) |
+| Google Gemma (all versions) | Mistral / Mixtral |
+| Microsoft Phi-3 / Phi-3.5 | DeepSeek |
+| Yi-1.5 | SmolLM2 / TinyLlama / StableLM |
+
+If you try to download a gated model without a token, the download will fail with a `401` or `403` error.
+
+### Step 1 -- Create a HuggingFace account
+
+Go to [huggingface.co](https://huggingface.co) and sign up for free.
+
+### Step 2 -- Generate an access token
+
+1. Click your profile picture (top right) then **Settings**
+2. Left sidebar: **Access Tokens**
+3. Click **New token**
+4. Give it any name (e.g. `ai-chat`), set role to **Read**
+5. Click **Generate token** and **copy it immediately** -- it won't be shown again
+
+### Step 3 -- Accept the model license on HuggingFace
+
+Navigate to the model's page on HuggingFace (for example, `meta-llama/Llama-3.1-8B-Instruct`) and click **Agree and access repository**. You need to do this once per model family in your browser while logged in. Without this step the download will fail even with a valid token.
+
+### Step 4 -- Log in from inside the venv
+
+```bat
+venv\Scripts\activate
+huggingface-cli login
+```
+
+Paste your token when prompted and press Enter. It gets saved to `~/.cache/huggingface/token` on your machine and the app picks it up automatically from that point on. You only need to do this once.
+
+> **Note:** Your token is stored locally on your own machine only. It is not read, stored, or transmitted by this app in any way.
+
+<br>
+
+---
+
+<br>
+
 ## Troubleshooting
+
+**Model download fails with 401 or 403 error**
+The model is gated. You need to: (1) accept the license on the model's HuggingFace page while logged in, and (2) run `huggingface-cli login` inside the venv with a valid access token. See the **Gated Models** section above.
 
 **PyAudio won't install**
 ```bat
